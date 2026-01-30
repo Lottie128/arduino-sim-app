@@ -1,99 +1,153 @@
-# Arduino Simulation & Programming Platform
+# Arduino Simulation & Programming Platform (Desktop)
 
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/downloads/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Arduino CLI](https://img.shields.io/badge/Arduino_CLI-Compatible-00979D.svg)](https://arduino.github.io/arduino-cli/)
+[![PyQt6](https://img.shields.io/badge/GUI-PyQt6-41CD52.svg)](https://www.riverbankcomputing.com/software/pyqt/)
 
-A comprehensive web-based electronics simulation platform for Arduino and ESP32 that bridges virtual circuit design with real hardware deployment. Design, simulate, and upload code directly to physical boards - all from your browser.
+A comprehensive **offline desktop application** for Arduino and ESP32 electronics simulation and programming. Design circuits visually, simulate behavior in real-time, and upload code directly to physical boards - all without internet connection.
 
-## 🚀 Features
+## ✨ Key Features
 
-### Circuit Simulation
-- **Interactive Circuit Builder**: Drag-and-drop interface for designing Arduino/ESP32 circuits
-- **Component Library**: Extensive collection of sensors, actuators, displays, and passive components
-- **Real-time Simulation**: Live circuit behavior visualization with WebSocket updates
-- **Wiring Validation**: Automatic connection checking and error detection
-- **Visual Debugging**: Pin state monitoring and serial output visualization
+### 🖥️ Offline Desktop Application
+- **No internet required** - fully functional offline
+- **Native desktop performance** with PyQt6
+- **Cross-platform** - Windows, macOS, Linux
+- **Standalone executable** - no Python installation needed for end users
 
-### Hardware Integration
-- **Arduino CLI Integration**: Direct compilation and upload to physical boards
-- **Multi-board Support**: Arduino Uno, Mega, Nano, ESP32, ESP8266, and more
-- **Port Auto-detection**: Automatic USB device discovery
-- **Serial Monitor**: Real-time serial communication with connected devices
-- **OTA Updates**: Over-the-air programming for ESP32/ESP8266
+### 🔌 Circuit Simulation
+- **Visual circuit designer** - drag-and-drop component placement
+- **Extensive component library** - sensors, actuators, displays, passive components
+- **Real-time simulation** - live circuit behavior with instant feedback
+- **Connection validation** - automatic wiring error detection
+- **Pin state visualization** - LED indicators and voltage monitoring
+- **Virtual oscilloscope** - signal waveform display
 
-### Code Management
-- **Built-in Code Editor**: Syntax highlighting and auto-completion for Arduino C/C++
-- **Code Generation**: Auto-generate Arduino sketches from circuit designs
-- **Library Management**: Install and manage Arduino libraries
-- **Version Control**: Save and load project configurations
-- **Code Templates**: Pre-built examples for common projects
+### 📡 Hardware Integration
+- **Arduino CLI integration** - direct compilation and upload
+- **Multi-board support** - Arduino Uno, Mega, Nano, ESP32, ESP8266, and more
+- **Auto port detection** - automatic USB device discovery
+- **Serial monitor** - real-time serial communication
+- **Serial plotter** - visualize sensor data
+- **OTA programming** - wireless upload for ESP32/ESP8266
 
-### Educational Features
-- **Component Datasheets**: Integrated documentation and pinout diagrams
-- **Tutorial Mode**: Step-by-step guidance for beginners
-- **Project Examples**: Curated collection of starter projects
-- **Virtual Oscilloscope**: Visualize analog signals and PWM outputs
+### 💻 Code Editor
+- **Syntax highlighting** - Arduino C/C++ with color coding
+- **Auto-completion** - intelligent code suggestions
+- **Error highlighting** - real-time syntax checking
+- **Code templates** - pre-built examples and snippets
+- **Auto-generate code** - from circuit design
+- **Library manager** - install and manage Arduino libraries
 
-## 🏗️ Architecture
+### 📚 Educational Features
+- **Component datasheets** - built-in documentation
+- **Tutorial projects** - step-by-step learning
+- **Example circuits** - 50+ ready-to-use projects
+- **Interactive help** - context-sensitive guidance
+
+## 🏗️ Application Architecture
 
 ```
 arduino-sim-app/
-├── backend/                  # Python FastAPI backend
-│   ├── api/                  # REST API endpoints
-│   ├── arduino_cli/          # Arduino CLI wrapper
-│   ├── simulation/           # Circuit simulation engine
-│   ├── websocket/            # Real-time communication
-│   └── models/               # Data models and schemas
-├── frontend/                 # React-based UI
-│   ├── components/           # React components
-│   ├── canvas/               # Circuit design canvas
-│   ├── editor/               # Code editor integration
-│   └── simulator/            # Simulation visualizer
-├── components/               # Component library definitions
-├── examples/                 # Sample projects
-└── docs/                     # Documentation
+├── main.py                    # Application entry point
+├── requirements.txt           # Python dependencies
+├── src/
+│   ├── ui/                    # PyQt6 user interface
+│   │   ├── main_window.py     # Main application window
+│   │   ├── canvas_view.py     # Circuit design canvas
+│   │   ├── code_editor.py     # Code editor widget
+│   │   ├── serial_monitor.py  # Serial communication
+│   │   ├── component_panel.py # Component library panel
+│   │   └── toolbar.py         # Application toolbar
+│   ├── simulation/            # Circuit simulation engine
+│   │   ├── engine.py          # Main simulation loop
+│   │   ├── components/        # Component models
+│   │   ├── circuit.py         # Circuit graph manager
+│   │   └── solver.py          # Circuit equation solver
+│   ├── arduino/               # Arduino CLI wrapper
+│   │   ├── cli_manager.py     # Arduino CLI interface
+│   │   ├── board_manager.py   # Board detection and config
+│   │   ├── compiler.py        # Sketch compilation
+│   │   ├── uploader.py        # Firmware upload
+│   │   └── serial_comm.py     # Serial communication
+│   ├── models/                # Data models
+│   │   ├── component.py       # Component definitions
+│   │   ├── project.py         # Project structure
+│   │   └── circuit.py         # Circuit data model
+│   └── utils/                 # Utilities
+│       ├── code_generator.py  # Arduino code generation
+│       ├── file_manager.py    # Project save/load
+│       └── validators.py      # Input validation
+├── resources/                 # Application resources
+│   ├── icons/                 # UI icons
+│   ├── components/            # Component images
+│   ├── templates/             # Code templates
+│   └── examples/              # Example projects
+├── data/                      # Component library data
+│   ├── components.json        # Component definitions
+│   ├── boards.json            # Board configurations
+│   └── libraries.json         # Library catalog
+├── tests/                     # Unit and integration tests
+└── build/                     # Executable builds
 ```
 
 ## 🛠️ Technology Stack
 
-### Backend
-- **FastAPI**: High-performance async Python web framework
-- **Arduino CLI**: Official Arduino command-line interface
-- **PySerial**: Serial communication with hardware
-- **WebSockets**: Real-time bidirectional communication
-- **SQLite/PostgreSQL**: Project and user data storage
-- **Pydantic**: Data validation and serialization
+### Desktop Framework
+- **PyQt6** - Modern Qt6 bindings for Python
+- **PyQtGraph** - Fast plotting for oscilloscope and serial plotter
+- **QScintilla** - Advanced code editor with syntax highlighting
 
-### Frontend
-- **React**: Modern UI framework
-- **Konva.js/Fabric.js**: Canvas-based circuit designer
-- **Monaco Editor**: VS Code-powered code editor
-- **Socket.io Client**: Real-time updates
-- **Material-UI/Tailwind**: Component styling
+### Simulation Engine
+- **NumPy** - Numerical computations for circuit solving
+- **SciPy** - Advanced circuit analysis algorithms
+- **Custom Python engine** - Component behavior modeling
 
-### Simulation
-- **Custom Python Engine**: Component behavior simulation
-- **SPICE Integration** (optional): Advanced circuit analysis
-- **WebGL**: Hardware-accelerated rendering
+### Hardware Communication
+- **Arduino CLI** - Official Arduino toolchain
+- **PySerial** - Serial port communication
+- **pyusb** - USB device detection
+
+### Data Management
+- **SQLite** - Local project database
+- **JSON** - Component and configuration storage
+- **Pickle** - Fast project serialization
 
 ## 📋 Prerequisites
 
 - Python 3.8 or higher
-- Node.js 16+ and npm (for frontend)
-- Arduino CLI installed and configured
-- USB drivers for Arduino/ESP32 boards
-- Modern web browser (Chrome, Firefox, Edge)
+- Arduino CLI installed
+- USB drivers for Arduino/ESP32 boards (typically auto-installed)
+- 4GB RAM minimum, 8GB recommended
+- 500MB free disk space
 
-## 🔧 Installation
+## 🚀 Installation
 
-### 1. Clone the Repository
+### Option 1: Run from Source (Developers)
+
+#### 1. Clone Repository
 ```bash
 git clone https://github.com/Lottie128/arduino-sim-app.git
 cd arduino-sim-app
 ```
 
-### 2. Install Arduino CLI
+#### 2. Create Virtual Environment
+```bash
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# macOS/Linux
+source venv/bin/activate
+```
+
+#### 3. Install Dependencies
+```bash
+pip install -r requirements.txt
+```
+
+#### 4. Install Arduino CLI
 
 **Linux/macOS:**
 ```bash
@@ -101,7 +155,7 @@ curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.
 export PATH=$PATH:$HOME/bin
 arduino-cli core update-index
 arduino-cli core install arduino:avr
-arduino-cli core install esp32:esp32
+arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
 ```
 
 **Windows:**
@@ -109,230 +163,274 @@ arduino-cli core install esp32:esp32
 winget install ArduinoSA.CLI
 arduino-cli core update-index
 arduino-cli core install arduino:avr
-arduino-cli core install esp32:esp32
+arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
 ```
 
-### 3. Backend Setup
-
+#### 5. Run Application
 ```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r requirements.txt
+python main.py
 ```
 
-### 4. Frontend Setup
+### Option 2: Install Pre-built Executable (End Users)
 
-```bash
-cd frontend
-npm install
-```
+1. Download the latest release for your platform from [Releases](https://github.com/Lottie128/arduino-sim-app/releases)
+2. Extract the archive
+3. Run the executable:
+   - **Windows**: `ArduinoSimApp.exe`
+   - **macOS**: `ArduinoSimApp.app`
+   - **Linux**: `./ArduinoSimApp`
 
-### 5. Configuration
+## 🎮 Usage Guide
 
-Create `.env` file in the backend directory:
-```env
-ARDUINO_CLI_PATH=/path/to/arduino-cli
-PORT=8000
-DATABASE_URL=sqlite:///./arduino_sim.db
-CORS_ORIGINS=http://localhost:3000
-WEBSOCKET_PORT=8001
-```
+### Creating Your First Circuit
 
-## 🚀 Running the Application
+1. **Launch the application** - Open ArduinoSimApp
+2. **Select board** - Choose Arduino Uno, ESP32, etc. from the toolbar
+3. **Add components**:
+   - Browse component panel on the left
+   - Drag components onto the canvas
+   - Position them as desired
+4. **Wire connections**:
+   - Click on a component pin
+   - Click on another pin to create connection
+   - Right-click connection to delete
+5. **Simulate**:
+   - Click "▶ Start Simulation" button
+   - Observe LED states, serial output, etc.
+   - Adjust component values in real-time
+6. **Write/Generate code**:
+   - Switch to Code tab
+   - Write custom code or click "Generate from Circuit"
+   - Edit in the code editor
+7. **Upload to hardware**:
+   - Connect Arduino/ESP32 via USB
+   - Select port from dropdown
+   - Click "Upload" button
 
-### Development Mode
+### Keyboard Shortcuts
 
-**Terminal 1 - Backend:**
-```bash
-cd backend
-source venv/bin/activate
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
-```
+| Action | Shortcut |
+|--------|----------|
+| New Project | Ctrl+N |
+| Open Project | Ctrl+O |
+| Save Project | Ctrl+S |
+| Start/Stop Simulation | F5 |
+| Compile Code | F7 |
+| Upload to Board | F9 |
+| Serial Monitor | Ctrl+Shift+M |
+| Component Search | Ctrl+F |
+| Zoom In | Ctrl++ |
+| Zoom Out | Ctrl+- |
+| Delete Selected | Delete |
 
-**Terminal 2 - Frontend:**
-```bash
-cd frontend
-npm start
-```
+### Project Structure
 
-Access the application at `http://localhost:3000`
-
-### Production Deployment
-
-```bash
-# Build frontend
-cd frontend
-npm run build
-
-# Run backend with production settings
-cd ../backend
-gunicorn main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8000
-```
-
-## 📖 Usage Guide
-
-### Creating a New Circuit
-
-1. **Launch the App**: Open your browser and navigate to the application
-2. **New Project**: Click "New Circuit" and select your target board (e.g., Arduino Uno, ESP32)
-3. **Add Components**: Drag components from the library onto the canvas
-4. **Wire Connections**: Click pins to create connections between components
-5. **Simulate**: Click "Run Simulation" to test circuit behavior
-6. **Generate Code**: Auto-generate Arduino sketch or write custom code
-7. **Upload**: Connect your board and click "Upload to Board"
-
-### Uploading to Physical Hardware
-
-```python
-# Example: Upload sketch via Python API
-import requests
-
-response = requests.post('http://localhost:8000/api/upload', json={
-    'board': 'arduino:avr:uno',
-    'port': '/dev/ttyUSB0',  # or COM3 on Windows
-    'sketch': sketch_code
-})
-```
-
-### Using Arduino CLI Wrapper
-
-```python
-from backend.arduino_cli import ArduinoManager
-
-manager = ArduinoManager()
-
-# List available boards
-boards = manager.list_boards()
-
-# Compile sketch
-result = manager.compile(sketch_path, 'arduino:avr:uno')
-
-# Upload to board
-manager.upload(sketch_path, 'arduino:avr:uno', '/dev/ttyUSB0')
-
-# Monitor serial output
-manager.start_serial_monitor('/dev/ttyUSB0', 9600)
-```
+Projects are saved as `.ardusim` files containing:
+- Circuit design (components and connections)
+- Arduino code
+- Board configuration
+- Simulation settings
+- Serial monitor data
 
 ## 🧩 Component Library
 
-### Currently Supported Components
+### Input Components
+- **Buttons & Switches**: Push button, toggle switch, DIP switch
+- **Sensors**: DHT11/22 (temp/humidity), DS18B20, BMP280, PIR motion, HC-SR04 ultrasonic
+- **Input Devices**: Potentiometer, joystick, rotary encoder, keypad
+- **Light Sensors**: LDR, photodiode, phototransistor
+- **Motion**: MPU6050 (accelerometer/gyro), ADXL345
 
-**Input Devices:**
-- Push buttons, switches, potentiometers
-- Temperature sensors (DHT11, DHT22, DS18B20)
-- Motion sensors (PIR, ultrasonic)
-- Light sensors (LDR, photoresistor)
-- Accelerometers and gyroscopes
+### Output Components
+- **LEDs**: Standard LED, RGB LED, NeoPixel strips
+- **Displays**: 16x2 LCD, 20x4 LCD, OLED (SSD1306), 7-segment display, TFT LCD
+- **Motors**: DC motor, servo motor, stepper motor (28BYJ-48)
+- **Sound**: Piezo buzzer, passive buzzer, speaker
+- **Relays**: 5V relay module, solid-state relay
 
-**Output Devices:**
-- LEDs (standard, RGB, NeoPixel)
-- LCD displays (16x2, 20x4, I2C)
-- OLED displays (SSD1306)
-- Servo motors, DC motors, stepper motors
-- Buzzers and speakers
+### Communication Modules
+- **Serial**: UART, Software Serial
+- **Wireless**: ESP32/ESP8266 WiFi, HC-05/06 Bluetooth, NRF24L01 RF
+- **Protocols**: I2C devices, SPI devices
 
-**Communication:**
-- UART, I2C, SPI interfaces
-- Bluetooth modules (HC-05, HC-06)
-- WiFi modules (ESP8266, ESP32 built-in)
-- RF modules (NRF24L01)
+### Power & Passive
+- **Power**: Battery, power supply, voltage regulator (7805, LM317)
+- **Resistors**: Fixed, variable (potentiometer)
+- **Capacitors**: Ceramic, electrolytic
+- **Others**: Diode, transistor (NPN/PNP), LED
 
-**Passive Components:**
-- Resistors, capacitors, inductors
-- Transistors, diodes, voltage regulators
+## 🔧 Arduino CLI Integration
 
-## 🔌 API Documentation
+### Board Management
 
-### REST Endpoints
+```python
+from src.arduino.cli_manager import ArduinoCLI
 
+cli = ArduinoCLI()
+
+# List available boards
+boards = cli.list_boards()
+
+# Detect connected boards
+connected = cli.detect_boards()
+
+# Install board package
+cli.install_core('esp32:esp32')
 ```
-GET    /api/boards              # List available boards
-GET    /api/ports               # List connected devices
-POST   /api/compile             # Compile Arduino sketch
-POST   /api/upload              # Upload to board
-GET    /api/libraries           # List installed libraries
-POST   /api/libraries/install   # Install library
-GET    /api/components          # Get component library
-POST   /api/projects            # Save project
-GET    /api/projects/:id        # Load project
+
+### Compilation and Upload
+
+```python
+from src.arduino.compiler import Compiler
+from src.arduino.uploader import Uploader
+
+# Compile sketch
+compiler = Compiler()
+result = compiler.compile(
+    sketch_path='project/sketch.ino',
+    fqbn='arduino:avr:uno'
+)
+
+if result.success:
+    # Upload to board
+    uploader = Uploader()
+    uploader.upload(
+        sketch_path='project/sketch.ino',
+        fqbn='arduino:avr:uno',
+        port='/dev/ttyUSB0'
+    )
 ```
 
-### WebSocket Events
+### Serial Communication
 
-```javascript
-// Client -> Server
-socket.emit('simulate', { circuit: circuitData });
-socket.emit('serial_connect', { port: '/dev/ttyUSB0', baudRate: 9600 });
+```python
+from src.arduino.serial_comm import SerialMonitor
 
-// Server -> Client
-socket.on('simulation_update', (data) => { /* Update UI */ });
-socket.on('serial_data', (data) => { /* Display serial output */ });
-socket.on('upload_progress', (progress) => { /* Show progress */ });
+monitor = SerialMonitor()
+monitor.connect('/dev/ttyUSB0', baudrate=9600)
+
+# Send data
+monitor.write('Hello Arduino\n')
+
+# Read data
+data = monitor.read_line()
+print(f'Received: {data}')
+
+# Close connection
+monitor.disconnect()
+```
+
+## 🎨 Code Generation
+
+The app automatically generates Arduino code from your circuit:
+
+```cpp
+// Auto-generated from circuit design
+
+// Pin definitions
+#define LED_PIN 13
+#define BUTTON_PIN 2
+#define TEMP_SENSOR_PIN A0
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(LED_PIN, OUTPUT);
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+}
+
+void loop() {
+  // Button control
+  if (digitalRead(BUTTON_PIN) == LOW) {
+    digitalWrite(LED_PIN, HIGH);
+  } else {
+    digitalWrite(LED_PIN, LOW);
+  }
+  
+  // Temperature reading
+  int tempValue = analogRead(TEMP_SENSOR_PIN);
+  float temperature = tempValue * (5.0 / 1023.0) * 100.0;
+  Serial.println(temperature);
+  
+  delay(100);
+}
 ```
 
 ## 🧪 Testing
 
 ```bash
-# Backend tests
-cd backend
-pytest tests/ -v --cov=./
+# Run all tests
+pytest tests/ -v
 
-# Frontend tests
-cd frontend
-npm test
+# Run specific test file
+pytest tests/test_simulation.py -v
 
-# Integration tests
-pytest tests/integration/ -v
+# Run with coverage
+pytest tests/ --cov=src --cov-report=html
+
+# Run UI tests (requires display)
+pytest tests/test_ui.py -v --no-headless
 ```
 
-## 🤝 Contributing
+## 📦 Building Executables
 
-Contributions are welcome! Please follow these steps:
+### Using PyInstaller
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+```bash
+# Install PyInstaller
+pip install pyinstaller
 
-### Development Guidelines
+# Build for current platform
+pyinstaller --onefile --windowed \
+  --name ArduinoSimApp \
+  --icon resources/icons/app_icon.ico \
+  --add-data "resources:resources" \
+  --add-data "data:data" \
+  main.py
 
-- Follow PEP 8 for Python code
-- Use ESLint and Prettier for JavaScript/React
-- Write unit tests for new features
-- Update documentation for API changes
-- Add component definitions for new hardware
+# Output in dist/ folder
+```
 
-## 📚 Project Structure Details
+### Platform-Specific Builds
 
-### Backend Components
+**Windows:**
+```bash
+pyinstaller build_windows.spec
+```
 
-- **`api/`**: REST API route handlers
-- **`arduino_cli/`**: Arduino CLI wrapper and board management
-- **`simulation/`**: Circuit simulation engine and component models
-- **`websocket/`**: Real-time communication handlers
-- **`models/`**: Pydantic models and database schemas
-- **`utils/`**: Helper functions and utilities
+**macOS:**
+```bash
+pyinstaller build_macos.spec
+# Create DMG installer
+hdiutil create -volname "ArduinoSimApp" -srcfolder dist/ArduinoSimApp.app -ov -format UDZO ArduinoSimApp.dmg
+```
 
-### Frontend Components
-
-- **`components/canvas/`**: Circuit design drag-and-drop interface
-- **`components/editor/`**: Code editor with syntax highlighting
-- **`components/simulator/`**: Real-time simulation visualizer
-- **`components/hardware/`**: Board connection and upload UI
-- **`services/`**: API client and WebSocket manager
+**Linux:**
+```bash
+pyinstaller build_linux.spec
+# Create AppImage or DEB package
+```
 
 ## 🐛 Troubleshooting
+
+### Application Won't Start
+```bash
+# Check Python version
+python --version  # Should be 3.8+
+
+# Reinstall dependencies
+pip install -r requirements.txt --force-reinstall
+
+# Run with debug output
+python main.py --debug
+```
 
 ### Arduino CLI Not Found
 ```bash
 # Verify installation
 arduino-cli version
 
-# Update PATH if needed
-export PATH=$PATH:/path/to/arduino-cli
+# Set custom path in settings
+# Settings > Arduino CLI Path > Browse
 ```
 
 ### Port Access Denied (Linux)
@@ -342,40 +440,86 @@ sudo usermod -a -G dialout $USER
 # Log out and back in
 ```
 
-### ESP32 Upload Issues
+### ESP32 Upload Fails
 ```bash
-# Install ESP32 board support
+# Install/update ESP32 core
+arduino-cli core update-index
 arduino-cli core install esp32:esp32 --additional-urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+
+# Hold BOOT button during upload
 ```
 
-### WebSocket Connection Failed
-- Check CORS settings in backend `.env`
-- Verify firewall allows port 8001
-- Ensure backend is running before frontend
+### Simulation Runs Slowly
+- Reduce component count
+- Lower simulation speed in settings
+- Disable oscilloscope when not needed
+- Close unused tabs
+
+## 🤝 Contributing
+
+Contributions welcome! Please:
+
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/NewComponent`)
+3. Commit changes (`git commit -m 'Add new component'`)
+4. Push to branch (`git push origin feature/NewComponent`)
+5. Open Pull Request
+
+### Development Setup
+
+```bash
+# Install development dependencies
+pip install -r requirements-dev.txt
+
+# Install pre-commit hooks
+pre-commit install
+
+# Run code formatting
+black src/
+flake8 src/
+
+# Type checking
+mypy src/
+```
+
+### Adding New Components
+
+1. Create component model in `src/simulation/components/`
+2. Add component definition to `data/components.json`
+3. Add icon to `resources/components/`
+4. Write tests in `tests/test_components.py`
+5. Update documentation
 
 ## 📝 Roadmap
 
-- [ ] Advanced SPICE simulation integration
-- [ ] Collaborative circuit editing
-- [ ] Mobile app (React Native)
-- [ ] Cloud project storage
-- [ ] AI-powered circuit design assistant
-- [ ] PCB layout generation
+### Version 1.1
+- [ ] Advanced SPICE integration
+- [ ] PCB layout generation export
 - [ ] 3D component visualization
-- [ ] Multi-language support
-- [ ] Raspberry Pi integration
 - [ ] Custom component creator
+
+### Version 1.2
+- [ ] Multi-language support (Spanish, French, German)
+- [ ] Cloud project backup (optional)
+- [ ] Collaborative editing (offline-first)
+- [ ] Video tutorials integration
+
+### Version 2.0
+- [ ] Raspberry Pi support
+- [ ] FPGA simulation
+- [ ] AI circuit design assistant
+- [ ] Augmented reality component preview
 
 ## 📄 License
 
-MIT License - see [LICENSE](LICENSE) file for details
+MIT License - see [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
 - Arduino CLI team for excellent tooling
+- Qt Company for PyQt6 framework
 - Wokwi and Tinkercad for inspiration
 - Open-source electronics community
-- All contributors to this project
 
 ## 📧 Contact
 
@@ -385,4 +529,4 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 ---
 
-**Star ⭐ this repository if you find it useful!**
+**⭐ Star this repository if you find it useful!**
