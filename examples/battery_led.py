@@ -8,8 +8,8 @@ import sys
 from pathlib import Path
 
 # Add src to path
-src_path = Path(__file__).parent.parent / 'src'
-sys.path.insert(0, str(src_path))
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 from src.ui.qt_compat import QApplication, QPointF, QTimer, exec_app
 from src.ui.canvas_view import CanvasView, WireGraphicsItem
