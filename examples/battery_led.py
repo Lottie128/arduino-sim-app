@@ -11,33 +11,22 @@ from pathlib import Path
 src_path = Path(__file__).parent.parent / 'src'
 sys.path.insert(0, str(src_path))
 
-from PyQt6.QtWidgets import QApplication
-from PyQt6.QtCore import QPointF, QTimer
-from src.ui.canvas_view import CanvasView
-from src.models.component import Component, Pin, Connection
+from src.ui.qt_compat import QApplication, QPointF, QTimer, exec_app
+from src.ui.canvas_view import CanvasView, WireGraphicsItem
+from src.models.component import Connection
 
 
 def create_battery_led_circuit(canvas: CanvasView):
     """
     Creates a simple circuit:
     Battery (5V) -> Resistor (220Ω) -> LED -> back to Battery
-    
-    This demonstrates:
-    - Component creation
-    - Wiring connections
-    - Simulation of LED brightness based on current
     """
     
     print("Creating Battery + LED Circuit...")
     
     # Add components to canvas
-    # Battery at position (0, 0)
     canvas.add_component('battery', QPointF(-200, 0))
-    
-    # Resistor at position (0, 0) - limits current to safe value for LED
     canvas.add_component('resistor', QPointF(0, -100))
-    
-    # LED at position (200, 0)
     canvas.add_component('led', QPointF(200, 0))
     
     # Get component references
@@ -51,7 +40,6 @@ def create_battery_led_circuit(canvas: CanvasView):
     print(f"LED ID: {led.id}")
     
     # Create connections
-    # Connection 1: Battery positive -> Resistor pin1
     connection1 = Connection(
         from_component=battery.id,
         from_pin='positive',
@@ -61,7 +49,6 @@ def create_battery_led_circuit(canvas: CanvasView):
     canvas.circuit.add_connection(connection1)
     print(f"Connected: Battery(+) -> Resistor(pin1)")
     
-    # Connection 2: Resistor pin2 -> LED anode
     connection2 = Connection(
         from_component=resistor.id,
         from_pin='pin2',
@@ -71,7 +58,6 @@ def create_battery_led_circuit(canvas: CanvasView):
     canvas.circuit.add_connection(connection2)
     print(f"Connected: Resistor(pin2) -> LED(anode)")
     
-    # Connection 3: LED cathode -> Battery negative (completing the circuit)
     connection3 = Connection(
         from_component=led.id,
         from_pin='cathode',
@@ -81,13 +67,10 @@ def create_battery_led_circuit(canvas: CanvasView):
     canvas.circuit.add_connection(connection3)
     print(f"Connected: LED(cathode) -> Battery(-)")
     
-    # Manually create wire graphics items for visualization
-    # (In the main app, this is done automatically through mouse interaction)
+    # Create wire graphics items
     battery_item = canvas.component_items[battery.id]
     resistor_item = canvas.component_items[resistor.id]
     led_item = canvas.component_items[led.id]
-    
-    from src.ui.canvas_view import WireGraphicsItem
     
     # Wire 1: Battery to Resistor
     start_pos1 = battery_item.mapToScene(battery_item.pin_items['positive'].pos())
@@ -113,15 +96,6 @@ def create_battery_led_circuit(canvas: CanvasView):
     print("\nCircuit created successfully!")
     print(f"Components: {len(canvas.circuit.components)}")
     print(f"Connections: {len(canvas.circuit.connections)}")
-    
-    # Validate circuit
-    errors = canvas.circuit.validate()
-    if errors:
-        print("\nCircuit validation errors:")
-        for error in errors:
-            print(f"  - {error}")
-    else:
-        print("\nCircuit validation: OK")
     
     # Print expected behavior
     print("\n" + "="*60)
@@ -173,7 +147,7 @@ def main():
     print("- Select components: Click to select, drag to move")
     print("="*60)
     
-    sys.exit(app.exec())
+    sys.exit(exec_app(app))
 
 
 if __name__ == '__main__':

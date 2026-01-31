@@ -3,15 +3,12 @@ Circuit Design Canvas View
 Handles component placement, wiring, and visual rendering
 """
 
-from PyQt6.QtWidgets import (
+from .qt_compat import (
     QGraphicsView, QGraphicsScene, QGraphicsItem,
     QGraphicsEllipseItem, QGraphicsLineItem, QGraphicsRectItem,
-    QGraphicsTextItem, QMenu
-)
-from PyQt6.QtCore import Qt, QPointF, QRectF, QTimer, pyqtSignal
-from PyQt6.QtGui import (
+    QGraphicsTextItem, QMenu, Qt, QPointF, QRectF, QTimer,
     QPen, QBrush, QColor, QPainter, QFont,
-    QLinearGradient, QRadialGradient
+    QLinearGradient, QRadialGradient, pyqtSignal
 )
 from typing import Optional, List, Dict, Tuple
 import math
@@ -69,7 +66,6 @@ class WireGraphicsItem(QGraphicsLineItem):
     def update_line(self):
         """Update wire path with right-angle routing"""
         # Simple L-shaped routing
-        mid_x = (self.start_pos.x() + self.end_pos.x()) / 2
         self.setLine(
             self.start_pos.x(), self.start_pos.y(),
             self.end_pos.x(), self.end_pos.y()
@@ -92,9 +88,15 @@ class ComponentGraphicsItem(QGraphicsItem):
         super().__init__()
         self.component = component
         self.pin_items: Dict[str, PinGraphicsItem] = {}
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
-        self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
+        try:
+            self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsMovable)
+            self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIsSelectable)
+            self.setFlag(QGraphicsItem.GraphicsItemFlag.ItemSendsGeometryChanges)
+        except:
+            # PyQt5 compatibility
+            self.setFlag(QGraphicsItem.ItemIsMovable)
+            self.setFlag(QGraphicsItem.ItemIsSelectable)
+            self.setFlag(QGraphicsItem.ItemSendsGeometryChanges)
         self.setZValue(5)
         self.create_pins()
         
@@ -124,7 +126,10 @@ class BatteryGraphicsItem(ComponentGraphicsItem):
     """Visual representation of a battery"""
     
     def paint(self, painter, option, widget):
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        try:
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        except:
+            painter.setRenderHint(QPainter.Antialiasing)
         
         # Battery body
         painter.setBrush(QBrush(QColor(80, 80, 80)))
@@ -141,14 +146,25 @@ class BatteryGraphicsItem(ComponentGraphicsItem):
         
         # Voltage label
         painter.setPen(QPen(QColor(255, 255, 255)))
-        painter.setFont(QFont('Arial', 10, QFont.Weight.Bold))
-        painter.drawText(QRectF(-25, -15, 50, 30), Qt.AlignmentFlag.AlignCenter, 
-                        f"{self.component.properties.get('voltage', 5)}V")
+        try:
+            painter.setFont(QFont('Arial', 10, QFont.Weight.Bold))
+        except:
+            painter.setFont(QFont('Arial', 10, QFont.Bold))
+        try:
+            painter.drawText(QRectF(-25, -15, 50, 30), Qt.AlignmentFlag.AlignCenter, 
+                            f"{self.component.properties.get('voltage', 5)}V")
+        except:
+            painter.drawText(QRectF(-25, -15, 50, 30), Qt.AlignCenter, 
+                            f"{self.component.properties.get('voltage', 5)}V")
         
         # Selection highlight
         if self.isSelected():
-            painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.PenStyle.DashLine))
-            painter.setBrush(Qt.BrushStyle.NoBrush)
+            try:
+                painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.PenStyle.DashLine))
+                painter.setBrush(Qt.BrushStyle.NoBrush)
+            except:
+                painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.DashLine))
+                painter.setBrush(Qt.NoBrush)
             painter.drawRect(-30, -20, 60, 40)
 
 
@@ -161,7 +177,10 @@ class LEDGraphicsItem(ComponentGraphicsItem):
         self.brightness = 0.0
         
     def paint(self, painter, option, widget):
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        try:
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        except:
+            painter.setRenderHint(QPainter.Antialiasing)
         
         # LED body (circle)
         color = QColor(self.component.properties.get('color', 'red'))
@@ -193,8 +212,12 @@ class LEDGraphicsItem(ComponentGraphicsItem):
         
         # Selection highlight
         if self.isSelected():
-            painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.PenStyle.DashLine))
-            painter.setBrush(Qt.BrushStyle.NoBrush)
+            try:
+                painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.PenStyle.DashLine))
+                painter.setBrush(Qt.BrushStyle.NoBrush)
+            except:
+                painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.DashLine))
+                painter.setBrush(Qt.NoBrush)
             painter.drawRect(-20, -30, 40, 60)
             
     def update_state(self):
@@ -218,7 +241,10 @@ class ResistorGraphicsItem(ComponentGraphicsItem):
     """Visual representation of a resistor"""
     
     def paint(self, painter, option, widget):
-        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        try:
+            painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        except:
+            painter.setRenderHint(QPainter.Antialiasing)
         
         # Resistor body
         painter.setBrush(QBrush(QColor(210, 180, 140)))
@@ -226,7 +252,6 @@ class ResistorGraphicsItem(ComponentGraphicsItem):
         painter.drawRect(-20, -8, 40, 16)
         
         # Color bands for resistance value
-        resistance = self.component.properties.get('resistance', 1000)
         painter.setPen(QPen(QColor(139, 69, 19), 3))
         painter.drawLine(-12, -8, -12, 8)
         painter.drawLine(-4, -8, -4, 8)
@@ -240,12 +265,20 @@ class ResistorGraphicsItem(ComponentGraphicsItem):
         # Value label
         painter.setPen(QPen(QColor(0, 0, 0)))
         painter.setFont(QFont('Arial', 8))
-        painter.drawText(QRectF(-20, 10, 40, 20), Qt.AlignmentFlag.AlignCenter,
-                        f"{resistance}Ω")
+        try:
+            painter.drawText(QRectF(-20, 10, 40, 20), Qt.AlignmentFlag.AlignCenter,
+                            f"{self.component.properties.get('resistance', 220)}Ω")
+        except:
+            painter.drawText(QRectF(-20, 10, 40, 20), Qt.AlignCenter,
+                            f"{self.component.properties.get('resistance', 220)}Ω")
         
         if self.isSelected():
-            painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.PenStyle.DashLine))
-            painter.setBrush(Qt.BrushStyle.NoBrush)
+            try:
+                painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.PenStyle.DashLine))
+                painter.setBrush(Qt.BrushStyle.NoBrush)
+            except:
+                painter.setPen(QPen(QColor(100, 200, 255), 2, Qt.DashLine))
+                painter.setBrush(Qt.NoBrush)
             painter.drawRect(-35, -15, 70, 45)
 
 
@@ -262,8 +295,12 @@ class CanvasView(QGraphicsView):
         self.setScene(self.scene)
         
         # Canvas settings
-        self.setRenderHint(QPainter.RenderHint.Antialiasing)
-        self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
+        try:
+            self.setRenderHint(QPainter.RenderHint.Antialiasing)
+            self.setDragMode(QGraphicsView.DragMode.RubberBandDrag)
+        except:
+            self.setRenderHint(QPainter.Antialiasing)
+            self.setDragMode(QGraphicsView.RubberBandDrag)
         self.setSceneRect(-1000, -1000, 2000, 2000)
         
         # Circuit model
@@ -367,7 +404,12 @@ class CanvasView(QGraphicsView):
         
     def mousePressEvent(self, event):
         """Handle mouse press for wiring"""
-        if event.button() == Qt.MouseButton.RightButton:
+        try:
+            right_button = Qt.MouseButton.RightButton
+        except:
+            right_button = Qt.RightButton
+            
+        if event.button() == right_button:
             # Check if clicked on a pin
             item = self.itemAt(event.pos())
             if isinstance(item, PinGraphicsItem):
@@ -410,7 +452,10 @@ class CanvasView(QGraphicsView):
             start_pos = component_item.mapToScene(pin_item.pos())
             self.temp_wire = QGraphicsLineItem(start_pos.x(), start_pos.y(), 
                                                start_pos.x(), start_pos.y())
-            self.temp_wire.setPen(QPen(QColor(100, 100, 255), 2, Qt.PenStyle.DashLine))
+            try:
+                self.temp_wire.setPen(QPen(QColor(100, 100, 255), 2, Qt.PenStyle.DashLine))
+            except:
+                self.temp_wire.setPen(QPen(QColor(100, 100, 255), 2, Qt.DashLine))
             self.scene.addItem(self.temp_wire)
             
     def complete_wiring(self, end_pin_item: PinGraphicsItem):

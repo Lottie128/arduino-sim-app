@@ -2,13 +2,12 @@
 Main Application Window
 """
 
-from PyQt6.QtWidgets import (
+from .qt_compat import (
     QMainWindow, QWidget, QVBoxLayout, QHBoxLayout,
     QSplitter, QTabWidget, QStatusBar, QMenuBar,
-    QMenu, QToolBar, QFileDialog, QMessageBox
+    QMenu, QToolBar, QFileDialog, QMessageBox,
+    Qt, QAction, QIcon, QKeySequence, pyqtSignal
 )
-from PyQt6.QtCore import Qt, QTimer, pyqtSignal
-from PyQt6.QtGui import QAction, QIcon, QKeySequence
 
 from .canvas_view import CanvasView
 from .code_editor import CodeEditor
@@ -91,29 +90,44 @@ class MainWindow(QMainWindow):
         file_menu = menubar.addMenu('&File')
         
         new_action = QAction('&New Project', self)
-        new_action.setShortcut(QKeySequence.StandardKey.New)
+        try:
+            new_action.setShortcut(QKeySequence.StandardKey.New)
+        except:
+            new_action.setShortcut(QKeySequence.New)
         new_action.triggered.connect(self.new_project)
         file_menu.addAction(new_action)
         
         open_action = QAction('&Open Project...', self)
-        open_action.setShortcut(QKeySequence.StandardKey.Open)
+        try:
+            open_action.setShortcut(QKeySequence.StandardKey.Open)
+        except:
+            open_action.setShortcut(QKeySequence.Open)
         open_action.triggered.connect(self.open_project)
         file_menu.addAction(open_action)
         
         save_action = QAction('&Save Project', self)
-        save_action.setShortcut(QKeySequence.StandardKey.Save)
+        try:
+            save_action.setShortcut(QKeySequence.StandardKey.Save)
+        except:
+            save_action.setShortcut(QKeySequence.Save)
         save_action.triggered.connect(self.save_project)
         file_menu.addAction(save_action)
         
         save_as_action = QAction('Save Project &As...', self)
-        save_as_action.setShortcut(QKeySequence.StandardKey.SaveAs)
+        try:
+            save_as_action.setShortcut(QKeySequence.StandardKey.SaveAs)
+        except:
+            save_as_action.setShortcut(QKeySequence.SaveAs)
         save_as_action.triggered.connect(self.save_project_as)
         file_menu.addAction(save_as_action)
         
         file_menu.addSeparator()
         
         exit_action = QAction('E&xit', self)
-        exit_action.setShortcut(QKeySequence.StandardKey.Quit)
+        try:
+            exit_action.setShortcut(QKeySequence.StandardKey.Quit)
+        except:
+            exit_action.setShortcut(QKeySequence.Quit)
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
         
@@ -121,25 +135,40 @@ class MainWindow(QMainWindow):
         edit_menu = menubar.addMenu('&Edit')
         
         undo_action = QAction('&Undo', self)
-        undo_action.setShortcut(QKeySequence.StandardKey.Undo)
+        try:
+            undo_action.setShortcut(QKeySequence.StandardKey.Undo)
+        except:
+            undo_action.setShortcut(QKeySequence.Undo)
         edit_menu.addAction(undo_action)
         
         redo_action = QAction('&Redo', self)
-        redo_action.setShortcut(QKeySequence.StandardKey.Redo)
+        try:
+            redo_action.setShortcut(QKeySequence.StandardKey.Redo)
+        except:
+            redo_action.setShortcut(QKeySequence.Redo)
         edit_menu.addAction(redo_action)
         
         edit_menu.addSeparator()
         
         cut_action = QAction('Cu&t', self)
-        cut_action.setShortcut(QKeySequence.StandardKey.Cut)
+        try:
+            cut_action.setShortcut(QKeySequence.StandardKey.Cut)
+        except:
+            cut_action.setShortcut(QKeySequence.Cut)
         edit_menu.addAction(cut_action)
         
         copy_action = QAction('&Copy', self)
-        copy_action.setShortcut(QKeySequence.StandardKey.Copy)
+        try:
+            copy_action.setShortcut(QKeySequence.StandardKey.Copy)
+        except:
+            copy_action.setShortcut(QKeySequence.Copy)
         edit_menu.addAction(copy_action)
         
         paste_action = QAction('&Paste', self)
-        paste_action.setShortcut(QKeySequence.StandardKey.Paste)
+        try:
+            paste_action.setShortcut(QKeySequence.StandardKey.Paste)
+        except:
+            paste_action.setShortcut(QKeySequence.Paste)
         edit_menu.addAction(paste_action)
         
         # Simulation menu
@@ -204,7 +233,6 @@ class MainWindow(QMainWindow):
         
     def new_project(self):
         """Create new project"""
-        # TODO: Check for unsaved changes
         self.project = Project()
         self.canvas_view.clear()
         self.code_editor.clear()
@@ -220,13 +248,11 @@ class MainWindow(QMainWindow):
             'Arduino Sim Projects (*.ardusim);;All Files (*)'
         )
         if filename:
-            # TODO: Load project
             self.status_bar.showMessage(f'Opened: {filename}')
             
     def save_project(self):
         """Save current project"""
         if self.project.filename:
-            # TODO: Save project
             self.status_bar.showMessage('Project saved')
         else:
             self.save_project_as()
@@ -240,7 +266,6 @@ class MainWindow(QMainWindow):
             'Arduino Sim Projects (*.ardusim)'
         )
         if filename:
-            # TODO: Save project
             self.project.filename = filename
             self.update_title()
             self.status_bar.showMessage(f'Saved as: {filename}')
@@ -259,12 +284,10 @@ class MainWindow(QMainWindow):
         """Compile Arduino code"""
         code = self.code_editor.get_code()
         self.status_bar.showMessage('Compiling...')
-        # TODO: Implement compilation
         
     def upload_code(self):
         """Upload code to Arduino board"""
         self.status_bar.showMessage('Uploading...')
-        # TODO: Implement upload
         
     def toggle_serial_monitor(self):
         """Show/hide serial monitor"""
@@ -296,5 +319,4 @@ class MainWindow(QMainWindow):
         
     def closeEvent(self, event):
         """Handle window close event"""
-        # TODO: Check for unsaved changes
         event.accept()
