@@ -2,7 +2,7 @@
 Code Editor Widget
 """
 
-from .qt_compat import QWidget, QVBoxLayout, QPlainTextEdit
+from .qt_compat import QWidget, QVBoxLayout, QPlainTextEdit, QFont
 
 
 class CodeEditor(QWidget):
@@ -15,9 +15,29 @@ class CodeEditor(QWidget):
     def init_ui(self):
         """Initialize UI"""
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
         
         self.text_edit = QPlainTextEdit()
-        self.text_edit.setPlainText("// Arduino code here\nvoid setup() {\n  \n}\n\nvoid loop() {\n  \n}")
+        self.text_edit.setPlainText(
+            "// Arduino code\n"
+            "\n"
+            "void setup() {\n"
+            "  Serial.begin(9600);\n"
+            "  pinMode(13, OUTPUT);\n"
+            "}\n"
+            "\n"
+            "void loop() {\n"
+            "  digitalWrite(13, HIGH);\n"
+            "  delay(1000);\n"
+            "  digitalWrite(13, LOW);\n"
+            "  delay(1000);\n"
+            "}\n"
+        )
+        
+        # Set monospace font
+        font = QFont("Courier")
+        font.setPointSize(12)
+        self.text_edit.setFont(font)
         
         layout.addWidget(self.text_edit)
         
@@ -31,4 +51,4 @@ class CodeEditor(QWidget):
         
     def clear(self):
         """Clear editor"""
-        self.text_edit.clear()
+        self.set_code("// Arduino code\n\nvoid setup() {\n  \n}\n\nvoid loop() {\n  \n}\n")
